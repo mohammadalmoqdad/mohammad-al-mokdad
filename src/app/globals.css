@@ -1,26 +1,221 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #070a0f;
+  --ink-soft: #0c1118;
+  --ink-panel: #111824;
+  --ink-raised: #111824;
+  --paper: #f4f6f8;
+  --muted: #a6b0be;
+  --accent: #4f7cff;
+  --accent-hover: #8aa8ff;
+  --accent-2: #50cfe6;
+  --violet: #816eff;
+  --line: rgb(255 255 255 / 0.08);
+  --line-hover: rgb(150 180 255 / 0.62);
+  --grid: rgb(255 255 255 / 0.028);
+  --nav-scrolled: rgb(7 10 15 / 0.72);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-panel: var(--ink-panel);
+  --color-ink-raised: var(--ink-raised);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-2: var(--accent-2);
+  --color-violet: var(--violet);
+  --color-line: var(--line);
+  --color-line-hover: var(--line-hover);
+  --font-sans: var(--font-body), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-body), "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-family), "Geist Mono", ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+  background: var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  overflow-x: clip;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  font-size: clamp(1.0625rem, 0.28vw + 1rem, 1.125rem);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 55%, transparent);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 80;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--ink);
+  padding: 0.6rem 1rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.site-noise {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  opacity: 0.018;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.surface {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--ink-soft) 88%, transparent);
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.04);
+}
+
+.surface-hover {
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.surface.surface-hover:hover {
+  border-color: var(--line-hover);
+  background: color-mix(in oklab, var(--ink-panel) 86%, rgb(79 124 255) 8%);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--muted) 88%, var(--accent));
+}
+
+.measure {
+  max-width: 46rem;
+}
+
+.text-veil {
+  position: relative;
+}
+
+.text-veil::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -14% -10% -18% -22%;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgb(7 10 15 / 0.88) 0%,
+    rgb(7 10 15 / 0.62) 58%,
+    transparent 86%
+  );
+}
+
+.named-star {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.22em;
+  color: rgb(228 237 255 / 0.38);
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.status-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent-2) 55%, transparent);
+  animation: pulse-dot 2.4s ease-out infinite;
+}
+
+@keyframes pulse-dot {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent-2) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 8px color-mix(in oklab, var(--accent-2) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent-2) 0%, transparent);
+  }
+}
+
+.space-fallback {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 72% 28%, rgb(79 124 255 / 0.16), transparent 42%),
+    radial-gradient(ellipse at 18% 78%, rgb(80 207 230 / 0.07), transparent 36%),
+    radial-gradient(circle at 50% 120%, rgb(79 124 255 / 0.12), transparent 48%),
+    #070a0f;
+}
+
+.space-fallback-star {
+  position: absolute;
+  border-radius: 999px;
+  background: #e4edff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .status-dot {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .text-veil::before {
+    background: linear-gradient(
+      180deg,
+      rgb(7 10 15 / 0.82) 0%,
+      rgb(7 10 15 / 0.62) 55%,
+      rgb(7 10 15 / 0.28) 100%
+    );
+  }
 }

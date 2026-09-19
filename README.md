@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mohammad Almokdad — Space portfolio variant
 
-## Getting Started
+Orbital / astronomy-driven interpretation of the same professional identity. Completely isolated from the current architectural portfolio.
 
-First, run the development server:
+```text
+Current version:
+architectural / Engineering Core portfolio
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Space version:
+orbital / astronomy-driven portfolio using the same professional content
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Run both versions side by side
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# current portfolio
+cd ../Portfolio
+npm install
+npm run dev
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# space version
+cd ../portfolio-space
+npm install
+npm run dev -- -p 3001
+```
 
-## Learn More
+Compare:
 
-To learn more about Next.js, take a look at the following resources:
+```text
+http://localhost:3000
+http://localhost:3001
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Comparison checklist
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Can a recruiter understand Mohammad in 10 seconds?
+2. Is Selected Work easy to find?
+3. Does the visual concept support or distract from the content?
+4. Is the space version still credible for serious engineering roles?
+5. Which version makes Jo Academy / Hearst / Bunyan easier to remember?
+6. Which is easier to read?
+7. Which feels more original?
+8. Which feels faster?
+9. Which works better on mobile?
+10. Which would you send with a job application?
 
-## Deploy on Vercel
+Do not treat either version as automatically better. Compare them.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev -- -p 3001
+npm run lint
+npm run typecheck
+npm run build
+```
