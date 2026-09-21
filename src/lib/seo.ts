@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { portfolio } from "@/data/portfolio";
 import { isPlaceholder } from "@/lib/utils";
 
-export function getMetadataBase(): URL {
+function getMetadataBase(): URL {
   if (isPlaceholder(portfolio.siteUrl)) {
     return new URL("http://localhost:3001");
   }

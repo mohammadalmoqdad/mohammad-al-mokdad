@@ -16,7 +16,7 @@ export function usePrefersReducedMotion(): boolean {
   );
 }
 
-export function useMediaQuery(query: string): boolean {
+function useMediaQuery(query: string): boolean {
   return useSyncExternalStore(
     (onChange) => subscribeMedia(query, onChange),
     () => window.matchMedia(query).matches,

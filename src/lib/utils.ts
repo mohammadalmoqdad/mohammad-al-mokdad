@@ -1,3 +1,6 @@
+import { destinationIndex } from "@/data/journey";
+import { journey, notifyJourneyFrame } from "@/lib/journey-store";
+
 export function cn(
   ...classes: Array<string | false | null | undefined>
 ): string {
@@ -47,14 +50,37 @@ export function mailtoHref(
     : `mailto:${email}`;
 }
 
-export function scrollToSection(sectionId: string): void {
+export function scrollToSection(sectionId: string, instant = false): void {
   const node = document.getElementById(sectionId);
   if (!node) {
     return;
   }
 
-  node.scrollIntoView({ behavior: "smooth", block: "start" });
-  window.history.replaceState(null, "", `#${sectionId}`);
+  const from = Math.round(journey.t);
+  const to = destinationIndex(sectionId);
+  if (to >= 0 && Math.abs(to - from) > 1) {
+    journey.warp = true;
+  }
+
+  const reduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const header = document.querySelector("header");
+  const offset = header?.getBoundingClientRect().height ?? 76;
+  const top =
+    node.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: instant || reduced ? "auto" : "smooth",
+  });
+  if (window.location.hash !== `#${sectionId}`) {
+    window.history.pushState(null, "", `#${sectionId}`);
+  }
+  notifyJourneyFrame();
+  window.setTimeout(() => {
+    journey.warp = false;
+    notifyJourneyFrame();
+  }, 1600);
 }
 
 export function isExternalHref(href: string): boolean {
@@ -62,6 +88,10 @@ export function isExternalHref(href: string): boolean {
 }
 
 export const RESUME_DOWNLOAD_NAME = "Mohammad_Almokdad_Resume.pdf";
+
+export const VISIBLE_TAG_LIMIT = 5;
+
+let webglSupport: boolean | null = null;
 
 export function hexToRgb(hex: string): [number, number, number] {
   const value = hex.replace("#", "");
@@ -78,12 +108,18 @@ export function seededRandom(seed: number): () => number {
 }
 
 export function detectWebGL(): boolean {
+  if (webglSupport !== null) {
+    return webglSupport;
+  }
   try {
     const canvas = document.createElement("canvas");
-    return Boolean(
-      canvas.getContext("webgl2") || canvas.getContext("webgl"),
-    );
+    const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+    webglSupport = Boolean(gl);
+    const lose = gl?.getExtension("WEBGL_lose_context");
+    lose?.loseContext();
+    return webglSupport;
   } catch {
+    webglSupport = false;
     return false;
   }
 }

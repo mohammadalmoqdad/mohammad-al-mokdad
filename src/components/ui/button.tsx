@@ -12,7 +12,7 @@ import { useCoarsePointer, usePrefersReducedMotion } from "@/hooks/use-media";
 import type { IButtonProps, TButtonVariant } from "@/types/ui";
 
 const VARIANT_CLASS: Record<TButtonVariant, string> = {
-  primary: "bg-accent text-ink hover:bg-accent-hover",
+  primary: "bg-paper text-ink hover:bg-white",
   secondary:
     "border border-line bg-transparent text-paper hover:border-line-hover hover:bg-white/5",
   ghost: "text-muted hover:text-paper",

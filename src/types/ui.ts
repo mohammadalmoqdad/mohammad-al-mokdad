@@ -11,6 +11,14 @@ import type {
 
 export type TButtonVariant = "primary" | "secondary" | "ghost";
 
+export type TTelescopeCursorState =
+  | "default"
+  | "interactive"
+  | "inspect"
+  | "planet"
+  | "text"
+  | "native";
+
 export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: TButtonVariant;
   href?: string;
@@ -50,6 +58,7 @@ export interface IModalBlockProps {
 export interface IExperienceCopyProps {
   item: TExperienceItem;
   isActive: boolean;
+  onActivate: () => void;
 }
 
 export interface ICapabilityBlockProps {
@@ -75,6 +84,21 @@ export interface IRevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
+}
+
+export interface ISectionShellProps {
+  id: TSectionId;
+  children: ReactNode;
+}
+
+export interface IJourneyProviderProps {
+  children: ReactNode;
+}
+
+export interface IPointerUi {
+  clientX: number;
+  clientY: number;
+  target: EventTarget | null;
 }
 
 export interface IPortfolioContextValue {

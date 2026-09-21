@@ -15,8 +15,8 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#070A0F",
-          color: "#f4f6f8",
+          background: "#050505",
+          color: "#f1f1f1",
           padding: 72,
         }}
       >
@@ -27,7 +27,7 @@ export default function OpenGraphImage() {
             height: 64,
             alignItems: "center",
             justifyContent: "center",
-            border: "1px solid #4F7CFF",
+            border: "1px solid #a0a0a0",
             fontSize: 22,
             letterSpacing: -1,
           }}
@@ -35,7 +35,7 @@ export default function OpenGraphImage() {
           MA
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 22, color: "#4F7CFF", letterSpacing: 4 }}>
+          <div style={{ fontSize: 22, color: "#a0a0a0", letterSpacing: 4 }}>
             SOFTWARE ENGINEER
           </div>
           <div
@@ -51,7 +51,7 @@ export default function OpenGraphImage() {
           <div
             style={{
               fontSize: 28,
-              color: "#A6B0BE",
+              color: "#a0a0a0",
               marginTop: 24,
               maxWidth: 860,
             }}

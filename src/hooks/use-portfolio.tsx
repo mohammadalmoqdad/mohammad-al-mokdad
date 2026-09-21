@@ -9,17 +9,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { DESTINATIONS } from "@/data/journey";
 import { portfolio } from "@/data/portfolio";
-import { useSectionObserver } from "@/hooks/use-section-observer";
-import { useCoarsePointer, useIsMobile, useIsTablet, usePrefersReducedMotion } from "@/hooks/use-media";
-import { setSpaceQuality, setSpaceSection, spaceRuntime } from "@/lib/space-runtime";
+import { useJourneyUi } from "@/hooks/use-journey-ui";
+import { journey } from "@/lib/journey-store";
+import { scrollToSection } from "@/lib/utils";
 import type { IPortfolioContextValue } from "@/types/ui";
 import type { TSectionId } from "@/types/portfolio";
 
 const PortfolioContext = createContext<IPortfolioContextValue | null>(null);
 
 export function PortfolioProvider({ children }: { children: ReactNode }) {
-  const [activeSection, setActiveSection] = useState<TSectionId>("hero");
+  const ui = useJourneyUi();
+  const activeSection =
+    DESTINATIONS[ui.transit > 0.45 ? ui.to : ui.from]?.id ?? "hero";
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
   const [commandOpen, setCommandOpen] = useState(false);
   const [activeWorkId, setActiveWorkId] = useState(portfolio.work.items[0].id);
@@ -29,53 +32,22 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [activeCapabilityId, setActiveCapabilityId] = useState(
     portfolio.capabilities.items[0].id,
   );
-  const reduced = usePrefersReducedMotion();
-  const mobile = useIsMobile();
-  const tablet = useIsTablet();
-  const coarse = useCoarsePointer();
 
-  const handleSectionChange = useCallback((id: TSectionId) => {
-    setActiveSection((current) => (current === id ? current : id));
+  const setActiveSection = useCallback((id: TSectionId) => {
+    scrollToSection(id);
   }, []);
 
-  useSectionObserver(handleSectionChange);
-
   useEffect(() => {
-    setSpaceSection(activeSection);
-  }, [activeSection]);
-
-  useEffect(() => {
-    spaceRuntime.workId = activeWorkId;
+    journey.workId = activeWorkId;
   }, [activeWorkId]);
 
   useEffect(() => {
-    spaceRuntime.experienceId = activeExperienceId;
+    journey.experienceId = activeExperienceId;
   }, [activeExperienceId]);
 
   useEffect(() => {
-    spaceRuntime.capabilityId = activeCapabilityId;
+    journey.capabilityId = activeCapabilityId;
   }, [activeCapabilityId]);
-
-  useEffect(() => {
-    spaceRuntime.reducedMotion = reduced;
-    setSpaceQuality(mobile ? "mobile" : tablet ? "tablet" : "desktop");
-  }, [mobile, reduced, tablet]);
-
-  useEffect(() => {
-    if (coarse) {
-      spaceRuntime.pointerX = 0;
-      spaceRuntime.pointerY = 0;
-      return;
-    }
-
-    const onMove = (event: PointerEvent) => {
-      spaceRuntime.pointerX = (event.clientX / window.innerWidth) * 2 - 1;
-      spaceRuntime.pointerY = (event.clientY / window.innerHeight) * 2 - 1;
-    };
-
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
-  }, [coarse]);
 
   const value = useMemo<IPortfolioContextValue>(
     () => ({
@@ -99,6 +71,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
       activeWorkId,
       commandOpen,
       openProjectId,
+      setActiveSection,
     ],
   );
 

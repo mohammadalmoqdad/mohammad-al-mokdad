@@ -1,14 +1,5 @@
 import type { TPortfolio, TSectionId } from "@/types/portfolio";
 
-export const SECTION_IDS: TSectionId[] = [
-  "hero",
-  "work",
-  "experience",
-  "capabilities",
-  "about",
-  "contact",
-];
-
 export const SECTION_LABELS: Record<TSectionId, string> = {
   hero: "00 / CORE",
   work: "01 / WORK",
@@ -24,7 +15,7 @@ export const portfolio: TPortfolio = {
   role: "Software Engineer",
   email: "almekdad.mohammad@gmail.com",
   phone: "+962 797 584 652",
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://YOUR_DOMAIN",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://mohammad-almokdad.vercel.app",
   resumePath: "/resume/Mohammad_Almokdad_Resume.pdf",
   whatsappUrl: "https://wa.me/962797584652",
   availability:
@@ -33,7 +24,7 @@ export const portfolio: TPortfolio = {
   hero: {
     eyebrow: "Mohammad Almokdad · Software Engineer",
     headline: ["I build products", "beyond the interface."],
-    body: "Software Engineer with 5+ years building production web products, focused on frontend and product engineering with React and Next.js, with experience across APIs, data, performance and responsive systems.",
+    body: "Software Engineer with 5+ years building production web products across React, Next.js, Angular and Vue, with a strong focus on frontend and product engineering, plus experience across APIs, data, performance and responsive systems.",
     primaryCta: { label: "View selected work", href: "#work" },
     secondaryCta: { label: "Let’s talk", href: "#contact" },
   },
@@ -46,11 +37,11 @@ export const portfolio: TPortfolio = {
         index: "01",
         title: "Education products with real operational complexity",
         subtitle:
-          "Jo Academy · ULA · School management platform · International curriculum",
+          "Jo Academy · ULA · Multi-tenant LMS & school management · International curriculum",
         summary:
           "Product engineering across Saudi and international-curriculum education products, with reusable frontend systems, complex permissions, multilingual RTL UX and API-driven workflows.",
         context:
-          "Jo Academy’s products span different education environments, including ULA in Saudi Arabia, a multi-tenant school management and learning platform, and an international-curriculum product.",
+          "Jo Academy’s products span different education environments, including ULA in Saudi Arabia, a multi-tenant learning management system (LMS) and school management platform, and an international-curriculum product.",
         workedOn:
           "Shipped production features and marketing-campaign work, built reusable patterns for forms, permissions, state/cache and API integration, and delivered bilingual Arabic/English experiences with RTL support alongside product, design, backend and marketing teams.",
         challenges:
@@ -160,7 +151,7 @@ export const portfolio: TPortfolio = {
         role: "Frontend Engineer",
         period: "Aug 2025 — Present",
         summary:
-          "At Jo Academy, I work across several education product contexts rather than one isolated application — including ULA in Saudi Arabia, a multi-tenant school management and learning platform, and an international-curriculum product supporting students, tutors, groups, sessions and appointments.",
+          "At Jo Academy I work across several education products — ULA in Saudi Arabia, a multi-tenant LMS and school management platform, and an international-curriculum product.",
         detail:
           "A large part of the work is building the shared systems underneath those features: reusable forms and workflows, roles and permissions, server state and caching, API integration, responsive Arabic/English interfaces and RTL behavior.",
         highlightLabel: "Beyond feature delivery",
@@ -175,7 +166,7 @@ export const portfolio: TPortfolio = {
         role: "Frontend Engineer",
         period: "Oct 2024 — Jul 2025",
         summary:
-          "At OmniOps, I worked on Bunyan and the inference-cloud product experience across both React and Vue surfaces. The interesting part was translating technically dense AI/inference workflows into product interfaces that remained clear, responsive and usable.",
+          "At OmniOps I worked on Bunyan and the inference-cloud product across React and Vue, turning dense AI/inference workflows into clear, responsive, accessible interfaces.",
         detail:
           "I worked closely with design and backend teams on API-connected flows, responsive behavior and interfaces built against accessibility and WCAG criteria.",
         tags: ["React", "Vue.js", "TypeScript", "WCAG", "API integration"],
@@ -187,7 +178,7 @@ export const portfolio: TPortfolio = {
         role: "Software Engineer",
         period: "Dec 2021 — Oct 2024",
         summary:
-          "Optimum gave me the broadest mix of engineering environments: distributed client work with organizations including Hearst, frontend development across React and Angular codebases, and production work where performance, SEO and Core Web Vitals were part of the engineering responsibility.",
+          "Optimum mixed distributed client work including Hearst with React and Angular, plus performance, SEO, Core Web Vitals, backend APIs and database work. I also contributed to an internal CMS/workflow platform for a Saudi government client.",
         detail:
           "My work also crossed the frontend boundary into backend APIs, database work and migrations. Separately, I contributed within a small team to an internal CMS/workflow platform supporting operational processes for a Saudi government client.",
         highlightLabel: "Client",
@@ -216,29 +207,28 @@ export const portfolio: TPortfolio = {
         index: "01",
         title: "Product Frontends",
         summary:
-          "Complex product interfaces: dashboards, workflows, forms, permissions, responsive systems and multilingual experiences.",
+          "Complex product interfaces: dashboards, workflows, forms, permissions, and multilingual UX.",
       },
       {
         id: "apis",
         index: "02",
-        title: "APIs & Data",
+        title: "Backend Engineering",
         summary:
-          "Backend integrations, REST/GraphQL APIs, authentication, schemas, migrations and the data layer behind the interface.",
+          "Backend services and data work: REST/GraphQL integrations, authentication, schemas, migrations, and the data layer behind the UI.",
       },
       {
         id: "quality",
         index: "03",
         title: "Performance & Quality",
         summary:
-          "Core Web Vitals, SEO, accessibility, testing and the production refinement that keeps products fast and usable.",
+          "Core Web Vitals, SEO, accessibility, and the production polish that keeps products usable.",
       },
     ],
   },
   about: {
     headline: "Good interfaces are only the visible layer.",
     paragraphs: [
-      "I’m most useful where product, design and engineering overlap. I like turning ambiguous requirements into reusable systems, and I care as much about what a team has to maintain after launch as I do about what users see on screen.",
-      "My current frontend focus is React and Next.js, backed by substantial professional Angular experience, Vue work, and practical experience across APIs, backend services and data.",
+      "I’m most useful where product, design and engineering overlap — turning ambiguous requirements into reusable systems that teams can maintain after launch. Current focus is React and Next.js, with professional Angular, Vue, and practical work across APIs, backend services and data.",
     ],
     principles: [
       {
@@ -273,7 +263,7 @@ export const portfolio: TPortfolio = {
       {
         id: "backend",
         title: "Backend & Data",
-        items: ["Node.js", "Express", "FastAPI", "PostgreSQL", "MongoDB"],
+        items: ["Node.js", "Express", "FastAPI", "Flask", "PostgreSQL", "MongoDB"],
       },
       {
         id: "quality",
@@ -371,7 +361,7 @@ export const portfolio: TPortfolio = {
     {
       id: "capabilities",
       label: "What I Work On",
-      hint: "Product, APIs, quality",
+      hint: "Product, backend, quality",
       action: "section",
       sectionId: "capabilities",
     },

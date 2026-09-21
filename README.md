@@ -1,13 +1,13 @@
 # Mohammad Almokdad — Space portfolio variant
 
-Orbital / astronomy-driven interpretation of the same professional identity. Completely isolated from the current architectural portfolio.
+Monochrome orbital journey through a fixed zigzag Solar-System corridor. Isolated from the architectural portfolio in `../Portfolio`.
 
 ```text
 Current version:
 architectural / Engineering Core portfolio
 
 Space version:
-orbital / astronomy-driven portfolio using the same professional content
+continuous monochrome orbital journey using the same professional content
 ```
 
 ## Run both versions side by side
@@ -31,20 +31,18 @@ http://localhost:3000
 http://localhost:3001
 ```
 
-## Comparison checklist
+Journey debug overlay (development only):
 
-1. Can a recruiter understand Mohammad in 10 seconds?
-2. Is Selected Work easy to find?
-3. Does the visual concept support or distract from the content?
-4. Is the space version still credible for serious engineering roles?
-5. Which version makes Jo Academy / Hearst / Bunyan easier to remember?
-6. Which is easier to read?
-7. Which feels more original?
-8. Which feels faster?
-9. Which works better on mobile?
-10. Which would you send with a job application?
+```text
+http://localhost:3001/?debug=journey
+```
 
-Do not treat either version as automatically better. Compare them.
+Direct destinations:
+
+```text
+http://localhost:3001/#about
+http://localhost:3001/#contact
+```
 
 ## Scripts
 

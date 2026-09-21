@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { portfolio } from "@/data/portfolio";
+import { useJourneyUi } from "@/hooks/use-journey-ui";
 import { usePortfolio } from "@/hooks/use-portfolio";
 import { cn, RESUME_DOWNLOAD_NAME, scrollToSection } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Monogram } from "@/components/ui/monogram";
 
 export function SiteHeader() {
   const { activeSection, setCommandOpen } = usePortfolio();
+  const ui = useJourneyUi();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -18,14 +20,19 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const headerOpacity = scrolled || ui.transit > 0.12
+    ? 0.42 + ui.transit * 0.38
+    : 0;
+
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-200",
-        scrolled
-          ? "border-b border-line bg-[var(--nav-scrolled)] backdrop-blur-[16px]"
-          : "border-b border-transparent bg-transparent",
+        "fixed inset-x-0 top-0 z-50 border-b transition-[border-color,backdrop-filter] duration-200",
+        scrolled || ui.transit > 0.12
+          ? "border-line backdrop-blur-[16px]"
+          : "border-transparent",
       )}
+      style={{ backgroundColor: `rgba(5,5,5,${headerOpacity})` }}
     >
       <div className="mx-auto flex max-w-[76rem] items-center justify-between gap-3 px-5 py-3 sm:px-8 lg:px-12">
         <a
@@ -68,7 +75,7 @@ export function SiteHeader() {
               {item.label}
               <span
                 className={cn(
-                  "absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-accent transition-transform duration-200",
+                  "absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-paper transition-transform duration-200",
                   activeSection === item.sectionId && "scale-x-100",
                 )}
                 aria-hidden="true"

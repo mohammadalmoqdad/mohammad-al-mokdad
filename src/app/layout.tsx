@@ -19,7 +19,7 @@ const mono = Geist_Mono({
 export const metadata: Metadata = getSiteMetadata();
 
 export const viewport: Viewport = {
-  themeColor: "#070A0F",
+  themeColor: "#050505",
   colorScheme: "dark",
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable} h-full antialiased`}
+      className={`${sans.variable} ${mono.variable} min-h-full antialiased`}
     >
       <body className="min-h-full bg-ink font-sans text-paper">
         <a href="#hero" className="skip-link">

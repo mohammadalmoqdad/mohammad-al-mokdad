@@ -1,121 +1,100 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
+import { PerformanceMonitor } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Vector3 } from "three";
-import { AmbientLights } from "@/components/space/ambient-lights";
-import { EngineeringCore } from "@/components/space/engineering-core";
-import { NamedStars } from "@/components/space/named-stars";
-import { OrbitalPaths } from "@/components/space/orbital-paths";
-import { SectionPlanets } from "@/components/space/section-planets";
+import { ACESFilmicToneMapping } from "three";
+import { CameraDirector } from "@/components/space/camera-director";
+import { CorridorWorld } from "@/components/space/corridor-world";
+import { FrameController } from "@/components/space/frame-controller";
 import { SpaceFallback } from "@/components/space/fallback";
-import { ShootingStar, StarField } from "@/components/space/star-field";
-import { CAMERA_DAMPING, POINTER_STRENGTH, SECTION_STATES, SPACE_DPR } from "@/data/space-config";
-import { useIsMobile, useIsTablet, usePrefersReducedMotion } from "@/hooks/use-media";
-import { usePortfolio } from "@/hooks/use-portfolio";
+import { CelestialSphere } from "@/components/space/sky/celestial-sphere";
+import { StarField } from "@/components/space/star-field";
+import { useQualityTier } from "@/hooks/use-quality-tier";
+import { usePrefersReducedMotion } from "@/hooks/use-media";
 import { detectWebGL } from "@/lib/utils";
-import { spaceRuntime } from "@/lib/space-runtime";
+import {
+  getSceneReady,
+  journey,
+  setJourneyQuality,
+  subscribeSceneReady,
+} from "@/lib/journey-store";
+import { MONO } from "@/data/mono-palette";
+import type { ISpaceSceneProps, TSpaceQuality } from "@/types/space";
 
-function CameraRig() {
-  const desired = useRef(new Vector3());
-  const look = useRef(new Vector3());
-    const currentLook = useRef(new Vector3(3.35, 0.1, -0.2));
-
-  useFrame((state, delta) => {
-    const config = SECTION_STATES[spaceRuntime.section];
-    desired.current.set(...config.cameraPosition);
-    look.current.set(...config.cameraTarget);
-
-    if (spaceRuntime.quality === "mobile") {
-      desired.current.x *= 0.35;
-      desired.current.z = Math.min(desired.current.z + 1.6, 11);
-    }
-
-    if (spaceRuntime.quality === "desktop" && !spaceRuntime.reducedMotion) {
-      desired.current.x += spaceRuntime.pointerX * POINTER_STRENGTH.x;
-      desired.current.y += -spaceRuntime.pointerY * POINTER_STRENGTH.y;
-    }
-
-    const lambda = spaceRuntime.reducedMotion
-      ? 1
-      : 1 - Math.exp(-CAMERA_DAMPING * delta);
-    state.camera.position.lerp(desired.current, lambda);
-    currentLook.current.lerp(look.current, lambda);
-    state.camera.lookAt(currentLook.current);
-  });
-
-  return null;
+function subscribeWebGL() {
+  return () => undefined;
 }
 
-function SpaceScene() {
-  const { activeSection, activeWorkId, activeExperienceId, activeCapabilityId } =
-    usePortfolio();
-  const mobile = useIsMobile();
-  const tablet = useIsTablet();
-  const reduced = usePrefersReducedMotion();
-  const quality = mobile ? "mobile" : tablet ? "tablet" : "desktop";
+function stepDown(quality: TSpaceQuality): TSpaceQuality {
+  if (quality === "high") {
+    return "medium";
+  }
+  return "low";
+}
 
+function SpaceScene({ quality }: ISpaceSceneProps) {
   return (
     <>
-      <AmbientLights />
-      <StarField key={`stars-${quality}`} />
-      <EngineeringCore />
-      <OrbitalPaths />
-      <SectionPlanets
-        workId={activeWorkId}
-        experienceId={activeExperienceId}
-        capabilityId={activeCapabilityId}
-        section={activeSection}
-      />
-      <NamedStars key={activeSection} />
-      {quality === "desktop" && !reduced ? <ShootingStar /> : null}
-      <CameraRig />
+      <color attach="background" args={[MONO.void]} />
+      <CelestialSphere />
+      <StarField quality={quality} />
+      <CorridorWorld />
+      <CameraDirector />
+      <FrameController />
     </>
   );
 }
 
 function SpaceCanvas() {
-  const mobile = useIsMobile();
-  const tablet = useIsTablet();
-  const quality = mobile ? "mobile" : tablet ? "tablet" : "desktop";
-  const [frameloop, setFrameloop] = useState<"always" | "never">("always");
-
-  useEffect(() => {
-    const sync = () => {
-      setFrameloop(document.hidden ? "never" : "always");
-    };
-    document.addEventListener("visibilitychange", sync);
-    return () => document.removeEventListener("visibilitychange", sync);
-  }, []);
+  const viewportQuality = useQualityTier();
+  const [gpuQuality, setGpuQuality] = useState<TSpaceQuality | null>(null);
+  const quality = gpuQuality ?? viewportQuality;
+  const dpr = quality === "low" ? 1 : quality === "medium" ? 1.15 : 1.5;
 
   return (
     <Canvas
       className="h-full w-full"
-      dpr={SPACE_DPR[quality]}
-      frameloop={frameloop}
+      dpr={dpr}
+      frameloop="demand"
       gl={{
-        antialias: quality !== "mobile",
-        alpha: true,
-        powerPreference: quality === "desktop" ? "high-performance" : "default",
+        antialias: quality !== "low",
+        alpha: false,
+        powerPreference: quality === "high" ? "high-performance" : "default",
         stencil: false,
       }}
-      camera={{
-        fov: quality === "mobile" ? 48 : 42,
-        near: 0.1,
-        far: 90,
-        position: SECTION_STATES.hero.cameraPosition,
+      camera={{ fov: quality === "low" ? 48 : 42, near: 0.1, far: 140 }}
+      onCreated={({ gl, invalidate }) => {
+        gl.setClearColor(MONO.void, 1);
+        gl.toneMapping = ACESFilmicToneMapping;
+        gl.toneMappingExposure = 1;
+        invalidate();
       }}
       style={{ pointerEvents: "none" }}
     >
+      <PerformanceMonitor
+        onDecline={() => {
+          const idle =
+            journey.transit < 0.05 &&
+            !journey.warp &&
+            Math.abs(journey.velocity) < 0.08;
+          if (idle) {
+            return;
+          }
+          const next = stepDown(quality);
+          setGpuQuality(next);
+          setJourneyQuality(next);
+        }}
+        onIncline={() => {
+          setGpuQuality(null);
+          setJourneyQuality(viewportQuality);
+        }}
+      />
       <Suspense fallback={null}>
-        <SpaceScene />
+        <SpaceScene quality={quality} />
       </Suspense>
     </Canvas>
   );
-}
-
-function subscribeWebGL() {
-  return () => undefined;
 }
 
 export function SpaceStage() {
@@ -124,17 +103,49 @@ export function SpaceStage() {
     detectWebGL,
     () => false,
   );
+  const ready = useSyncExternalStore(
+    subscribeSceneReady,
+    getSceneReady,
+    () => false,
+  );
+  const reduced = usePrefersReducedMotion();
+  const [canvasFadedIn, setCanvasFadedIn] = useState(() => getSceneReady());
+  const shell = useRef<HTMLDivElement>(null);
+  const showFallback = !ready || (!reduced && !canvasFadedIn);
+
+  useEffect(() => {
+    if (!ready || reduced) {
+      return;
+    }
+    const node = shell.current;
+    if (!node) {
+      return;
+    }
+    const onEnd = (event: TransitionEvent) => {
+      if (event.propertyName === "opacity") {
+        setCanvasFadedIn(true);
+      }
+    };
+    node.addEventListener("transitionend", onEnd);
+    return () => {
+      node.removeEventListener("transitionend", onEnd);
+    };
+  }, [ready, reduced]);
 
   if (!hasWebGL) {
     return <SpaceFallback />;
   }
 
   return (
-    <div
-      className="pointer-events-none fixed inset-0 z-0"
-      aria-hidden="true"
-    >
-      <SpaceCanvas />
+    <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+      {showFallback ? <SpaceFallback /> : null}
+      <div
+        ref={shell}
+        className="space-canvas-shell"
+        data-ready={ready ? "true" : "false"}
+      >
+        <SpaceCanvas />
+      </div>
     </div>
   );
 }

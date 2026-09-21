@@ -13,12 +13,12 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#080b12",
-          color: "#f4f6f8",
+          background: "#050505",
+          color: "#f1f1f1",
           fontSize: 16,
           fontWeight: 700,
           letterSpacing: -1,
-          border: "1px solid #4f8cff",
+          border: "1px solid #a0a0a0",
         }}
       >
         MA
